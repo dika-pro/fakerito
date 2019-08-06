@@ -1,0 +1,67 @@
+{
+  "projectName": "7Shop",
+  "projectTag": "7shop",
+  "projectTeam": "team_seven",
+  "slackChannel": "https://slack-nsoft.slack.com/messages/C5NMTPAQH/convo/C9V22GG4D-1535462077.000100",
+  "phabricator": {
+    "url": "https://phabricator.nsoft.ba",
+    "task": {
+      "customFields": {
+        "slack": "custom.nsoft:slack-channel"   
+      }
+    }
+  },
+  "releases": [{
+    "platform": "phabricator",
+    "previousVersion": "1.44.0",
+    "nextVersion": "1.45.0",
+    "releaseDate": "2019-07-29",
+    "releaseTimeFrom": "12:00",
+    "releaseTimeTo": "12:30",
+    "owner": "miletic.dinko",
+    "projects": ["team_seven"],
+    "subscribers": [
+      "buhovac.antonio",
+      "gagro.mateo",
+      "pandzic.ivan"
+    ],
+    "additionalInfo": [
+      {
+        "title": "Notes",
+        "entries": [
+          {
+            "value": "Downtime: NA"
+          },
+          {
+            "value": "All changes will be on *BETA* channel on 2019-07-25 12:00 - 12:30"
+          },
+          {
+            "value": "Team Sports and Team Ngs create release branch with changes (if any) until 16:00 day before *BETA* channel release."
+          },
+          {
+            "value": "Tasks: [Link](https://phabricator.nsoft.ba/maniphest/query/n3Ld09wBhTJo/#R)"
+          }
+        ]
+      },
+      {
+        "title": "Before Release",
+        "entries": [
+          {
+            "value": "Merge Team Sports and Team Ngs branches (if any)"
+          },
+          {
+            "value": "Check did we introduce any errors on beta channel with this release."
+          }
+        ]
+      },
+      {
+        "title": "After Release",
+        "entries": [
+          {
+            "value": "[] .placeholder"
+          }
+        ]
+      }
+    ]
+  }]
+}
