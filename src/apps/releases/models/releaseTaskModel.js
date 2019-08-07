@@ -154,7 +154,7 @@ ReleaseTask.prototype.createMilestone = async function() {
 }
 
 ReleaseTask.prototype.createOrUpdate = async function(taskPayload) {
-    if (this.phabTask.data) {
+    if (this.phabTask.data.length) {
         taskPayload.objectIdentifier = `T${this.phabTask.data[0].id}`;
     }
     return await phabricatorApi.exec('maniphest.edit', taskPayload);

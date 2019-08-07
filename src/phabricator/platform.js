@@ -6,7 +6,7 @@ function Phabricator (config) {
 }
 
 Phabricator.prototype.getConfig = function(key) {
-   return property(this.config)(key.split('.'));
+   return property(key)(this.config);
 }
 
 module.exports = {

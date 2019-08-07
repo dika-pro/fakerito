@@ -146,7 +146,7 @@ async function createReleaseNotes(params, config) {
   }); 
 
   if (!params['dry-run']) {
-    // response = await releaseTask.createOrUpdate(description);
+    response = await releaseTask.createOrUpdate(taskPayload);
     console.info(chalk.green(`Sucessfuly created release notes (${currentPlatform.getConfig('url')}/T${response.object.id}).`));
   } else {
     console.info(chalk.green(`Possibe task payload:`));

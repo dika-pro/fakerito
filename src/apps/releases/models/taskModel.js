@@ -18,7 +18,7 @@ Task.prototype.hasDowntime = function() {
 
 
 Task.prototype.getCallSign = function() {
-    return this.data.fields.name.split('-')[0];
+    return this.data.fields.name.split(/,?\s+/)[0];
 }
 
 Task.prototype.getNameShort = function() {
@@ -29,7 +29,7 @@ Task.prototype.getNameShort = function() {
 
 
 Task.prototype.getId = function() {
-    return this.data.fields.id;
+    return this.data.id;
 }
 
 module.exports = Task;

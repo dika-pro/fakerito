@@ -17,10 +17,15 @@ You will need to install [arcanist](https://github.com/phacility/arcanist) to st
 
 ### Usage
 
+Call commands
+
+```
+fakerito yourcommand --yourflag
+```
 
 #### Config
 
-You can set next options to customize your project.
+You can set next options to customize your project. Config is passed using ˙-c path/to/config.json˙
 
 ##### projectName
 Type: `string`

@@ -20,8 +20,7 @@ function genereateReleaseReport(data) {
     if (previousReleseTask.data.length) {
       final += `<p>Previous release task: {T${previousReleseTask.data[0].id}}</p>`;
     }
-    
-    final += `</p>`;
+
     final += `<h2>CHANGELOG</h2>`;
     if (tasks.length) {
       final += `<ul>`;
@@ -31,14 +30,14 @@ function genereateReleaseReport(data) {
         flags += task.isVisibleToClient();
         flags += task.hasDowntime();
 
-        if (!task.getCallSign('[RELEASE]')) {
+        if (task.getCallSign() !== '[RELEASE]') {
           final += `<li>${task.getNameShort()}(T${task.getId()}) ${flags}</li>`;
         }
       });
       final += `</ul>`;
       final += `<hr>`;
     }
-  
+
     if (releaseConfig.additionalInfo) {
       releaseConfig.additionalInfo.forEach((info) => {
         final += `<h3>${info.title}</h3>`;
