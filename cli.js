@@ -10,19 +10,12 @@ const platform = require('./src/phabricator/platform');
 const api = {
   releases: releaseApp
 };
+const configLoader = require('./src/config');
 
 const readConfig = (filename) => {
   const file = path.resolve(process.cwd(), filename);
-  let json = null;
-
-  try {
-    json = JSON.parse(fs.readFileSync(file).toString());
-  } catch (error) {
-    console.info(chalk.red('Error reading configuration file!'));
-    process.exit(2);
-  }
-
-  return json;
+  configLoader.loadFile(file);
+  return configLoader.toString();
 }; 
 
 const run = async () => {
