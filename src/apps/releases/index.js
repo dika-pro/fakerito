@@ -9,7 +9,7 @@ const platform = require('../../phabricator/platform');
 
 function help() {
   const usageText = `
-  release helps you manage you release process.
+  Release helps you manage you release process.
 
   usage:
     release <command>
@@ -20,7 +20,7 @@ function help() {
                  
                  --dry-run 
 
-    create-release-notes:      used to create release notes from active release
+    generate-release-notes:      used to create release notes from active release
                 --dry-run 
                 --draft 
                 
@@ -62,16 +62,16 @@ async function resolveRelease(params, config) {
     config,
     platform: currentPlatform
   });
-  releaseTask.fetchPhabData();
-  releaseTask.resolveRelease();
+  await releaseTask.fetchPhabData();
+  await releaseTask.resolveRelease();
 };
 
 async function history(params, config) {
   const tasksResponse = await phabricatorApi.exec('maniphest.search', {
     constraints: {
       projects: [
-        config.projectTag,
-        'software_release'
+        'software_release',
+        config.get('projectTag')
       ]
     },
     order: 'newest',
@@ -87,18 +87,18 @@ async function history(params, config) {
   });
 }
 
-async function createReleaseNotes(params, config) {
+async function generateReleaseNotes(params, config) {
   const currentPlatform = platform.getPlatform();
   let releaseTask = new ReleaseTask({
     config,
     platform: currentPlatform
   });
   let response = null;
-  const releaseConfig = config.releases[0];
+  const releaseConfig = config.get('releases')[0];
   const owner = await phabricatorUsers.getUsersByUsernames([releaseConfig.owner]);
   const subscribes = await phabricatorUsers.getUsersByUsernames(releaseConfig.subscribers);
   let description;
-  let title = `[RELEASE] ${config.projectName} - ${releaseConfig.nextVersion} - ${releaseConfig.releaseDate}`;
+  let title = `[RELEASE] ${config.get('projectName')} - ${releaseConfig.nextVersion} - ${releaseConfig.releaseDate}`;
   let taskPayload = {
     transactions:  [
       {
@@ -111,11 +111,11 @@ async function createReleaseNotes(params, config) {
       },
       {
         type: currentPlatform.getConfig('task.customFields.slack'),
-        value: config.slackChannel
+        value: config.get('slackChannel')
       },
     ]
   };
-  let projects = [...releaseConfig.projects, config.projectTag, `release_${releaseConfig.nextVersion}`];
+  let projects = [...releaseConfig.projects, config.get('projectTag'), `release_${releaseConfig.nextVersion}`];
   await releaseTask.fetchPhabData();
   description = releaseNotesView.genereateReleaseReport({
     releaseTask: releaseTask,
@@ -159,7 +159,7 @@ const api = {
   resolve: resolveRelease,
   history: history,
   help: help,
-  'create-release-notes': createReleaseNotes
+  'generate-release-notes': generateReleaseNotes
 }
 
 module.exports = function(params) {

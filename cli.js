@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const fs = require('fs');
 const chalk = require("chalk");
 const phabricatorApi = require('./src/phabricator/index');
 const releaseApp = require('./src/apps/releases');
@@ -15,7 +14,7 @@ const configLoader = require('./src/config');
 const readConfig = (filename) => {
   const file = path.resolve(process.cwd(), filename);
   configLoader.loadFile(file);
-  return configLoader.toString();
+  return configLoader;
 }; 
 
 const run = async () => {

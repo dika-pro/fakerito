@@ -21,6 +21,7 @@ ReleaseTask.prototype.setData = function(config) {
 }
 
 ReleaseTask.prototype.fetchPhabData = async function() {
+    const releaseConfig = this.config.get('releases')[0];
     this.phabTask = await phabricatorApi.exec('maniphest.search', {
         constraints: {
           query: `title:${this.getName()}`
@@ -28,22 +29,22 @@ ReleaseTask.prototype.fetchPhabData = async function() {
     });
     this.phabProject = await phabricatorApi.exec('project.search', {
         constraints: {
-            query: `title:${this.config.projectTag}`
+            query: `title:${this.config.get('projectTag')}`
         }
     });
-    this.phabOwner = await phabricatorUsers.getUsersByUsernames([this.config.releases[0].owner]);
+    this.phabOwner = await phabricatorUsers.getUsersByUsernames([releaseConfig.owner]);
 
-    this.phabSubscribers = await phabricatorUsers.getUsersByUsernames(this.config.releases[0].subscribers)
+    this.phabSubscribers = await phabricatorUsers.getUsersByUsernames(releaseConfig.subscribers)
     this.phabPreviousReleseTask = await phabricatorApi.exec('maniphest.search', {
         constraints: {
-          query: `title:[RELEASE] ${this.config.projectName} \\- ${this.config.releases[0].previousVersion}`
+          query: `title:[RELEASE] ${this.config.get('projectName')} \\- ${releaseConfig.previousVersion}`
         }
     });
     this.phabReleaseTasks = await phabricatorApi.exec('maniphest.search', {
         constraints: {
           projects: [
-            this.config.projectTag,
-            this.config.releases[0].nextVersion
+            this.config.get('projectTag'),
+            releaseConfig.nextVersion
           ]
         },
         order: 'priority',
@@ -57,19 +58,19 @@ ReleaseTask.prototype.getTasks = function() {
 }
 
 ReleaseTask.prototype.getFullStartDateAsString = function() {
-    return`${this.config.releases[0].releaseDate} ${this.config.releases[0].releaseTimeFrom}`;
+    return`${this.config.get('releases')[0].releaseDate} ${this.config.get('releases')[0].releaseTimeFrom}`;
 }
 
 ReleaseTask.prototype.getFullEndDateAsString = function() {
-    return `${this.config.releases[0].releaseDate} ${this.config.releases[0].releaseTimeTo}`;
+    return `${this.config.get('releases').releaseDate} ${this.config.get('releases')[0].releaseTimeTo}`;
 }
 
 ReleaseTask.prototype.getName = function() {
-    return `[RELEASE] ${this.config.projectName} \\- ${this.config.releases[0].nextVersion} \\- ${this.config.releases[0].releaseDate}`;
+    return `[RELEASE] ${this.config.get('projectName')} \\- ${this.config.get('releases')[0].nextVersion} \\- ${this.config.get('releases')[0].releaseDate}`;
 }
 
 ReleaseTask.prototype.getDisplayName = function() {
-    return `[RELEASE] ${this.config.projectName} - ${this.config.releases[0].nextVersion} - ${this.config.releases[0].releaseDate}`;
+    return `[RELEASE] ${this.config.get('projectName')} - ${this.config.get('releases')[0].nextVersion} - ${this.config.get('releases')[0].releaseDate}`;
 }
 
 
@@ -141,11 +142,11 @@ ReleaseTask.prototype.createMilestone = async function() {
             },
             {
                 type: 'name',
-                value: `[RELEASE] ${this.config.releases[0].nextVersion} - ${this.config.releases[0].releaseDate}`
+                value: `[RELEASE] ${this.config.get('releases')[0].nextVersion} - ${this.config.get('releases')[0].releaseDate}`
             },
             {
                 type: 'slugs',
-                value: [`${this.config.projectTag}_${this.config.releases[0].nextVersion}`]
+                value: [`${this.config.get('projectTag')}_${this.config.get('releases')[0].nextVersion}`]
             }
         ]
     };

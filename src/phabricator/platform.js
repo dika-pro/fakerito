@@ -6,12 +6,12 @@ function Phabricator (config) {
 }
 
 Phabricator.prototype.getConfig = function(key) {
-   return property(key)(this.config);
+   return this.config.get(key);
 }
 
 module.exports = {
     createPlatform: function(config) {
-        currentPlatfrom = new Phabricator(config.phabricator);
+        currentPlatfrom = new Phabricator(config.get('phabricator'));
     },
     getPlatform: function() {
         return currentPlatfrom;
