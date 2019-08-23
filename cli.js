@@ -4,10 +4,12 @@ const path = require('path');
 const chalk = require("chalk");
 const phabricatorApi = require('./src/phabricator/index');
 const releaseApp = require('./src/apps/releases');
+const iterationApp = require('./src/apps/iterations');
 const minimist = require('minimist');
 const platform = require('./src/phabricator/platform');
 const api = {
-  releases: releaseApp
+  releases: releaseApp,
+  iterations: iterationApp
 };
 const configLoader = require('./src/config');
 

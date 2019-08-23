@@ -25,7 +25,7 @@ fakerito [command] help
 
 ## Config
 
-You can set next options to customize your project. Config is passed using ˙-c path/to/config.json˙
+You can set next options to customize your project. Config is passed using `-c path/to/config.json`.
 
 #### projectName
 Type: `string`
@@ -203,7 +203,7 @@ Default: `null`
 
 It handles project releases.
 
-`releases create-release-notes`
+`releases generate-release-notes`
 
 It will create task with summary of upcoming taskas and notes.
 
