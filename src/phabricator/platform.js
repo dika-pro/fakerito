@@ -1,4 +1,3 @@
-const property = require('lodash/property');
 let currentPlatfrom = null;
 
 function Phabricator (config) {

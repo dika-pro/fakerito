@@ -48,8 +48,9 @@ async function createRelease(params, config) {
     await releaseTask.fetchPhabData();
 
     if (!params['dry-run']) {
-      // releaseTask.createEvent(69563);
+      releaseTask.createEvent(69563);
       milestoneResponse = releaseTask.createMilestone();
+      console.log(currentPlatform);
       console.info(chalk.green(`Sucessfuly created milestone (${currentPlatform.getConfig('url')}/project/view/${milestoneResponse.object.id}).`));
     } else {
 

@@ -62,7 +62,7 @@ ReleaseTask.prototype.getFullStartDateAsString = function() {
 }
 
 ReleaseTask.prototype.getFullEndDateAsString = function() {
-    return `${this.config.get('releases').releaseDate} ${this.config.get('releases')[0].releaseTimeTo}`;
+    return `${this.config.get('releases')[0].releaseDate} ${this.config.get('releases')[0].releaseTimeTo}`;
 }
 
 ReleaseTask.prototype.getName = function() {
@@ -71,11 +71,6 @@ ReleaseTask.prototype.getName = function() {
 
 ReleaseTask.prototype.getDisplayName = function() {
     return `[RELEASE] ${this.config.get('projectName')} - ${this.config.get('releases')[0].nextVersion} - ${this.config.get('releases')[0].releaseDate}`;
-}
-
-
-ReleaseTask.prototype.createReleaseTask = function() {
-    let response = null;
 }
 
 ReleaseTask.prototype.resolveRelease = async function() {
@@ -109,11 +104,11 @@ ReleaseTask.prototype.createEvent = async function(taskId) {
             },
             {
                 type: 'start',
-                value: moment(this.getFullStartDateAsString(), "YYYY-MM-DD HH:mm").unix()
+                value: 1483228800
             },
             {
                 type: 'end',
-                value: moment(this.getFullEndDateAsString(), "YYYY-MM-DD HH:mm").unix()
+                value: 1493228800
             },
             {
                 type: 'inviteePHIDs',
@@ -121,7 +116,7 @@ ReleaseTask.prototype.createEvent = async function(taskId) {
             },
             {
                 type: 'projects.add',
-                value: [...this.config.releases[0].projects, this.config.projectTag, 'software_release']
+                value: [...this.config.get('releases')[0].projects, this.config.get('projectTag'), 'software_release']
             },
             {
                 type: 'description',
