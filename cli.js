@@ -4,12 +4,12 @@ const path = require('path');
 const chalk = require("chalk");
 const phabricatorApi = require('./src/phabricator/index');
 const releaseApp = require('./src/apps/releases');
-const iterationApp = require('./src/apps/iterations');
+// const iterationApp = require('./src/apps/iterations');
 const minimist = require('minimist');
 const platform = require('./src/phabricator/platform');
 const api = {
   releases: releaseApp,
-  iterations: iterationApp
+  // iterations: iterationApp
 };
 const configLoader = require('./src/config');
 
@@ -25,7 +25,10 @@ const run = async () => {
   let argv = minimist(process.argv.slice(2));
   const config = readConfig(argv.c || './fakerito.config.json');
 
-  await phabricatorApi.connect();
+  await phabricatorApi.connect({
+    api: argv.api,
+    token: argv.token
+  });
 
   if (api.hasOwnProperty(argv._[0])) {
     platform.createPlatform(config);

@@ -2,10 +2,16 @@ const createCanduit = require('canduit');
 let connection = null;
 
 module.exports = {
-    connect() {
+    /**
+     * 
+     * @param {Object} [params] 
+     * @param {String} params.api 
+     * @param {String} params.token
+     */
+    connect(params) {
         return new Promise(function(resolve, reject){
             // Create and authenticate client
-            createCanduit((err, canduit) => {
+            createCanduit(params || {}, (err, canduit) => {
                 if (err) {
                     reject(err);
                 } else {

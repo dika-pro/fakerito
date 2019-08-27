@@ -16,7 +16,7 @@ function help() {
 
     commands can be:
 
-    create:      used to create a new release board
+    create:      used to create a new release board under {$projectTag}
                  
                  --dry-run 
 
