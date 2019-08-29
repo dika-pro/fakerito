@@ -3,7 +3,7 @@ function Task (data) {
 }
 
 Task.prototype.isVisibleToClient = function() {
-    if (this.data.fields.description.raw.indexOf('**Visible to client**: Yes') >= 0) {
+    if (this.data.fields.description.raw.indexOf('**Visible to client:** Yes') >= 0) {
         return '{icon eye}';
     }
     return '';
