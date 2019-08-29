@@ -1,11 +1,12 @@
 let currentPlatfrom = null;
+const property = require('lodash/property');
 
 function Phabricator (config) {
     this.config = config;
 }
 
 Phabricator.prototype.getConfig = function(key) {
-   return this.config.get(key);
+    return property(key)(this.config);
 }
 
 module.exports = {
