@@ -47,6 +47,9 @@ ReleaseTask.prototype.fetchPhabData = async function() {
             releaseConfig.nextVersion
           ]
         },
+        attachments: {
+            projects: true
+        },
         order: 'priority',
     });
 }

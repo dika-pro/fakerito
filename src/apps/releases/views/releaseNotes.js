@@ -1,5 +1,6 @@
 const showdown  = require('showdown');
 const jsdom = require("jsdom");
+const TASK_META_STATUSES =  require('../../../phabricator/tasks/TASK_META_STATUSES');
 
 function genereateReleaseReport(data) {
     const { JSDOM } = jsdom;
@@ -27,8 +28,9 @@ function genereateReleaseReport(data) {
       tasks.forEach((task) => {
         let flags = '';
 
-        flags += task.isVisibleToClient();
-        flags += task.hasDowntime();
+        flags +=  task.getTaskMetaFlagIcon(TASK_META_STATUSES.IS_VISIBLE_TO_CLIENT);
+        flags +=  task.getTaskMetaFlagIcon(TASK_META_STATUSES.HAS_DOWNTIME);
+        flags +=  task.getTaskMetaFlagIcon(TASK_META_STATUSES.IS_PATCH);
 
         if (task.getCallSign() !== '[RELEASE]') {
           final += `<li>${task.getNameShort()}(T${task.getId()}) ${flags}</li>`;
