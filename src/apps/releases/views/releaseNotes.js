@@ -1,5 +1,6 @@
 const showdown  = require('showdown');
 const jsdom = require("jsdom");
+const _ = require('lodash');
 const TASK_META_STATUSES =  require('../../../phabricator/tasks/TASK_META_STATUSES');
 
 function genereateReleaseReport(data) {
@@ -10,6 +11,9 @@ function genereateReleaseReport(data) {
     const releaseConfig = config.get('releases')[0];
     const previousReleseTask = releaseTask.phabPreviousReleseTask;
     const tasks = releaseTask.getTasks();
+    const legendDesc = _.map(TASK_META_STATUSES.api, (value) => {
+      return `{icon ${value.ICON}} - ${value.DESCRIPTION}`;
+    }).join(', ');
 
     let final = '';
     if (releaseTask.phabTask) {
@@ -37,6 +41,7 @@ function genereateReleaseReport(data) {
         }
       });
       final += `</ul>`;
+      final += `<p>${legendDesc}</p>`;
       final += `<hr>`;
     }
 

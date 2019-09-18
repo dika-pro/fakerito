@@ -10,7 +10,8 @@ module.exports = {
                 }
                 return false;
             },
-            ICON: 'eye'
+            ICON: 'eye',
+            DESCRIPTION: 'Visible to client'
         },
         HAS_DOWNTIME: {
            positive: function(params) {
@@ -20,7 +21,8 @@ module.exports = {
                 }
                 return false;
             },
-            ICON: 'arrow-circle-o-down'
+            ICON: 'arrow-circle-o-down',
+            DESCRIPTION: 'Has downtime'
         },
         IS_PATCH: {
             positive: function(params) {
@@ -31,7 +33,8 @@ module.exports = {
                  }
                  return false;
              },
-             ICON: 'arrow-circle-o-up'
+             ICON: 'arrow-circle-o-up',
+             DESCRIPTION: 'In patch version'
          }
     },
     IS_VISIBLE_TO_CLIENT: 'IS_VISIBLE_TO_CLIENT',
