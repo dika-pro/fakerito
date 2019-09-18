@@ -20,7 +20,7 @@ function help() {
                  
                  --dry-run 
 
-    generate-release-notes:      used to create release notes from active release
+    generate-release-notes:      used to create or update release notes for current release
                 --dry-run 
                 --draft 
                 
