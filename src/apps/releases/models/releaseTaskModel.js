@@ -44,7 +44,7 @@ ReleaseTask.prototype.fetchPhabData = async function() {
         constraints: {
           projects: [
             this.config.get('projectTag'),
-            releaseConfig.nextVersion
+            this.getReleaseTag()
           ]
         },
         attachments: {
@@ -166,5 +166,8 @@ ReleaseTask.prototype.addDataToCustomFields = async function(taskPayload) {
     return await phabricatorApi.exec('maniphest.edit', taskPayload);
 }
 
+ReleaseTask.prototype.getReleaseTag = function() {
+   return `release_${this.config.get('releases')[0].nextVersion}`;
+}
 
 module.exports = ReleaseTask;

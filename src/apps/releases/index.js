@@ -116,7 +116,8 @@ async function generateReleaseNotes(params, config) {
       },
     ]
   };
-  let projects = [...releaseConfig.projects, config.get('projectTag'), `release_${releaseConfig.nextVersion}`];
+
+  let projects = [...releaseConfig.projects, config.get('projectTag'), releaseTask.getReleaseTag()];
   await releaseTask.fetchPhabData();
   description = releaseNotesView.genereateReleaseReport({
     releaseTask: releaseTask,
