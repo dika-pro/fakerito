@@ -1,6 +1,6 @@
 {
   "name": "fakerito",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": false,
   "description": "CLI for boosting opinioned phabricator workflow",
   "engines": {
@@ -20,8 +20,8 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "repository" : {
-    "type" : "git",
+  "repository": {
+    "type": "git",
     "url": "ssh://git@github.com:dika-pro/fakerito.git"
   },
   "author": "miletic.dinko@nsoft.com",
