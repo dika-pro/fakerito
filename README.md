@@ -122,6 +122,10 @@ Default: `null`
 Type: `String`
 Default: `null`
 
+#### releases[].additionalInfo[].entries[].visible
+Type: `Boolean`
+Default: `true`
+
 
 ### Example config
 

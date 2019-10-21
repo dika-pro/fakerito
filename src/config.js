@@ -54,7 +54,7 @@ var config = convict({
                 default: 'phabricator'
             },
             previousVersion: {
-                doc: 'Platform',
+                doc: 'previousVersion',
                 format: String
             },
             nextVersion: {
@@ -82,11 +82,11 @@ var config = convict({
                 format: Array
             },
             subscribers: {
-                doc: 'Platform',
+                doc: 'subscribers',
                 format: Array
             },
             additionalInfo: {
-                doc: 'Platform',
+                doc: 'additionalInfo',
                 format: Array
             }
         }

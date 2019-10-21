@@ -50,7 +50,9 @@ function genereateReleaseReport(data) {
         final += `<h3>${info.title}</h3>`;
         final += `<ul>`;
         info.entries.forEach((entry) => {
-          final += `<li>${entry.value}</li>`;
+          if (!entry.visible) {
+            final += `<li>${entry.value}</li>`;
+          }
         });
         final += `</ul>`;
         final += `<hr>`;
