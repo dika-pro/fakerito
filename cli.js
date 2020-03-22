@@ -23,7 +23,9 @@ const run = async () => {
   // argv._[0] => app e.g. releases
   // argv._[1] => action e.g. create
   let argv = minimist(process.argv.slice(2));
+  let application = null;
   const config = readConfig(argv.c || './fakerito.config.json');
+  let result = null;
 
   await phabricatorApi.connect({
     api: argv.api,
@@ -32,14 +34,18 @@ const run = async () => {
 
   if (api.hasOwnProperty(argv._[0])) {
     platform.createPlatform(config);
-    api[argv._[0]]({
-      argv, 
-      config
-    });
+    application = api[argv._[0]];
+    result = application[argv._[1]](argv, config);
+    
+    if (result.error) {
+      console.warn(chalk.red(result.message));
+    } else {
+      console.info(chalk.green(result.message));
+    }
+    
   } else {
-    console.warn(chalk.red('App not found:', argv._[0]));
+    console.warn(chalk.red('Command not found:', argv._[0]));
   }
- 
 };
 
 run();
