@@ -21,7 +21,7 @@ ReleaseTask.prototype.setData = function(config) {
 }
 
 ReleaseTask.prototype.fetchPhabData = async function() {
-    const releaseConfig = this.config.get('releases')[0];
+    const releaseConfig = this.config;
     this.phabTask = await phabricatorApi.exec('maniphest.search', {
         constraints: {
           query: `title:${this.getName()}`
@@ -29,7 +29,7 @@ ReleaseTask.prototype.fetchPhabData = async function() {
     });
     this.phabProject = await phabricatorApi.exec('project.search', {
         constraints: {
-            query: `title:${this.config.get('projectTag')}`
+            query: `title:${this.config.projectTag}`
         }
     });
     this.phabOwner = await phabricatorUsers.getUsersByUsernames([releaseConfig.owner]);
@@ -37,13 +37,13 @@ ReleaseTask.prototype.fetchPhabData = async function() {
     this.phabSubscribers = await phabricatorUsers.getUsersByUsernames(releaseConfig.subscribers)
     this.phabPreviousReleseTask = await phabricatorApi.exec('maniphest.search', {
         constraints: {
-          query: `title:[RELEASE] ${this.config.get('projectName')} \\- ${releaseConfig.previousVersion}`
+          query: `title:[RELEASE] ${this.config.projectName} \\- ${releaseConfig.previousVersion}`
         }
     });
     this.phabReleaseTasks = await phabricatorApi.exec('maniphest.search', {
         constraints: {
           projects: [
-            this.config.get('projectTag'),
+            this.config.projectTag,
             this.getReleaseTag()
           ]
         },
@@ -61,19 +61,19 @@ ReleaseTask.prototype.getTasks = function() {
 }
 
 ReleaseTask.prototype.getFullStartDateAsString = function() {
-    return`${this.config.get('releases')[0].releaseDate} ${this.config.get('releases')[0].releaseTimeFrom}`;
+    return`${this.config.releaseDate} ${this.config.releaseTimeFrom}`;
 }
 
 ReleaseTask.prototype.getFullEndDateAsString = function() {
-    return `${this.config.get('releases')[0].releaseDate} ${this.config.get('releases')[0].releaseTimeTo}`;
+    return `${this.config.releaseDate} ${this.config.releaseTimeTo}`;
 }
 
 ReleaseTask.prototype.getName = function() {
-    return `[RELEASE] ${this.config.get('projectName')} \\- ${this.config.get('releases')[0].nextVersion} \\- ${this.config.get('releases')[0].releaseDate}`;
+    return `[RELEASE] ${this.config.projectName} \\- ${this.config.nextVersion} \\- ${this.config.releaseDate}`;
 }
 
 ReleaseTask.prototype.getDisplayName = function() {
-    return `[RELEASE] ${this.config.get('projectName')} - ${this.config.get('releases')[0].nextVersion} - ${this.config.get('releases')[0].releaseDate}`;
+    return `[RELEASE] ${this.config.projectName} - ${this.config.nextVersion} - ${this.config.releaseDate}`;
 }
 
 ReleaseTask.prototype.resolveRelease = async function() {
@@ -119,7 +119,7 @@ ReleaseTask.prototype.createEvent = async function(taskId) {
             },
             {
                 type: 'projects.add',
-                value: [...this.config.get('releases')[0].projects, this.config.get('projectTag'), 'software_release']
+                value: [...this.config.projects, this.config.projectTag, 'software_release']
             },
             {
                 type: 'description',
@@ -140,11 +140,11 @@ ReleaseTask.prototype.createMilestone = async function() {
             },
             {
                 type: 'name',
-                value: `[RELEASE] ${this.config.get('releases')[0].nextVersion} - ${this.config.get('releases')[0].releaseDate}`
+                value: `[RELEASE] ${this.config.nextVersion} - ${this.config.releaseDate}`
             },
             {
                 type: 'slugs',
-                value: [`${this.config.get('projectTag')}_${this.config.get('releases')[0].nextVersion}`]
+                value: [`${this.config.projectTag}_${this.config.nextVersion}`]
             }
         ]
     };
@@ -167,7 +167,7 @@ ReleaseTask.prototype.addDataToCustomFields = async function(taskPayload) {
 }
 
 ReleaseTask.prototype.getReleaseTag = function() {
-   return `release_${this.config.get('releases')[0].nextVersion}`;
+   return `release_${this.config.nextVersion}`;
 }
 
 module.exports = ReleaseTask;

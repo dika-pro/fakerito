@@ -34,6 +34,7 @@ Task.prototype.getCallSign = function() {
 Task.prototype.getNameShort = function() {
     // without getCallSign
     const nameDisambled = this.data.fields.name.split('-');
+    // fix short name
     return nameDisambled[nameDisambled.length - 1];
 }
 

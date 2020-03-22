@@ -8,7 +8,7 @@ function genereateReleaseReport(data) {
     const dom = new JSDOM();
     const converter = new showdown.Converter();
     const { config, releaseTask } = data;
-    const releaseConfig = config.get('releases')[0];
+    const releaseConfig = config;
     const previousReleseTask = releaseTask.phabPreviousReleseTask;
     const tasks = releaseTask.getTasks();
     const legendDesc = _.map(TASK_META_STATUSES.api, (value) => {

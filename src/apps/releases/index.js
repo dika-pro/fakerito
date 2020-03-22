@@ -50,7 +50,6 @@ async function createRelease(params, config) {
     if (!params['dry-run']) {
       releaseTask.createEvent(69563);
       milestoneResponse = releaseTask.createMilestone();
-      console.log(currentPlatform);
       console.info(chalk.green(`Sucessfuly created milestone (${currentPlatform.getConfig('url')}/project/view/${milestoneResponse.object.id}).`));
     } else {
 
@@ -88,18 +87,17 @@ async function history(params, config) {
   });
 }
 
-async function generateReleaseNotes(params, config) {
+async function generateReleaseNotes(params, newRelease) {
   const currentPlatform = platform.getPlatform();
   let releaseTask = new ReleaseTask({
-    config,
+    config: newRelease,
     platform: currentPlatform
   });
   let response = null;
-  const releaseConfig = config.get('releases')[0];
-  const owner = await phabricatorUsers.getUsersByUsernames([releaseConfig.owner]);
-  const subscribes = await phabricatorUsers.getUsersByUsernames(releaseConfig.subscribers);
+  const owner = await phabricatorUsers.getUsersByUsernames([newRelease.owner]);
+  const subscribes = await phabricatorUsers.getUsersByUsernames(newRelease.subscribers);
   let description;
-  let title = `[RELEASE] ${config.get('projectName')} - ${releaseConfig.nextVersion} - ${releaseConfig.releaseDate}`;
+  let title = `[RELEASE] ${newRelease.projectName} - ${newRelease.nextVersion} - ${newRelease.releaseDate}`;
   let taskPayload = {
     transactions:  [
       {
@@ -112,16 +110,21 @@ async function generateReleaseNotes(params, config) {
       },
       {
         type: currentPlatform.getConfig('task.customFields.slack'),
-        value: config.get('slackChannel')
+        value: newRelease.slackChannel
       },
     ]
   };
+  const result = {
+    message: '',
+    erorr: false,
+    release: null
+  }
 
-  let projects = [...releaseConfig.projects, config.get('projectTag'), releaseTask.getReleaseTag()];
+  let projects = [...newRelease.projects, newRelease.projectTag, releaseTask.getReleaseTag()];
   await releaseTask.fetchPhabData();
   description = releaseNotesView.genereateReleaseReport({
     releaseTask: releaseTask,
-    config: config
+    config: newRelease
   });
 
   taskPayload.transactions.push({
@@ -147,25 +150,22 @@ async function generateReleaseNotes(params, config) {
     value: projects
   }); 
 
-  if (!params['dry-run']) {
-    response = await releaseTask.createOrUpdate(taskPayload);
-    console.info(chalk.green(`Sucessfuly created release notes (${currentPlatform.getConfig('url')}/T${response.object.id}).`));
+  if (params['dry-run'] || params.dryRun === true) {
+    result.message = `Sucessfuly created draft release notes.`;
+    result.release = description;
   } else {
-    console.info(chalk.green(`Possibe task payload:`));
-    console.info(JSON.stringify(taskPayload));
+    response = await releaseTask.createOrUpdate(taskPayload);
+    result.release = response.data;
+    result.message = `Sucessfuly created release notes. See (${currentPlatform.getConfig('url')}/T${response.object.id}).`;
   }
+
+  return result;
 }
 
-const api = {
+module.exports = {
   create: createRelease,
   resolve: resolveRelease,
   history: history,
   help: help,
   'generate-release-notes': generateReleaseNotes
-}
-
-module.exports = function(params) {
-  const argv = params.argv;
-  const config = params.config;
-  api[argv._[1]](argv, config);
 }
