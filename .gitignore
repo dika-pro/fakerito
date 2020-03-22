@@ -96,3 +96,8 @@ typings/
 
 # VS Code history
 .history
+
+# Custom
+
+db.json
+config/
