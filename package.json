@@ -4,10 +4,14 @@
   "private": false,
   "description": "CLI for boosting opinioned phabricator workflow",
   "engines": {
-    "node": "~9.7.1",
+    "node": "12.x",
     "npm": "~6.2.0"
   },
   "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --inspect ./index.js",
+    "start": "node ./index.js"
+  },
   "bin": {
     "fakerito": "./cli.js",
     "fakerito-server": "./index.js"
@@ -34,6 +38,7 @@
     "convict": "^4.4.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
     "inquirer": "^6.2.2",
     "jsdom": "^14.0.0",
     "lodash": "^4.17.13",
@@ -45,5 +50,8 @@
     "shelljs": "^0.8.3",
     "shortid": "^2.2.15",
     "showdown": "^1.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
