@@ -35,7 +35,8 @@ const run = async () => {
   if (api.hasOwnProperty(argv._[0])) {
     platform.createPlatform(config);
     application = api[argv._[0]];
-    result = application[argv._[1]](argv, config);
+
+    result = application[argv._[1]](argv, config.getProperties());
     
     if (result.error) {
       console.warn(chalk.red(result.message));

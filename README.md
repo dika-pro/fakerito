@@ -14,120 +14,125 @@ npm install fakerito --save-dev
 
 ## Usage
 
-Installing the CLI globally provides access to the fakerito command.
+Installing the CLI globally provides access to the fakerito CLI command and a fakerito server.
 
 ```
 fakerito [command]
 
 # Run `help` for detailed information about CLI commands
 fakerito [command] help
+
+# Brings up server
+fakerito-server
 ```
 
-## Config
+## fakerito
 
-You can set next options to customize your project. Config is passed using `-c path/to/config.json`.
+### Config
 
-#### projectName
+You can set next options for your project. Config is passed using `-c path/to/config.json`.
+
+##### projectName
 Type: `string`
 
 Display name for project that will be used in generating titles and names.
 
-#### projectTag
+##### projectTag
 Type: `string`
 
 Project tag created by phabricator.
 
-#### projectTeam
+##### projectTeam
 Type: `string`
 
 Project team tag created by phabricator.
 
-#### slackChannel
+##### slackChannel
 Type: `string`
 
 Slack channel.
 
-#### releases
+##### releases
 Type: `Array`
 
 Release data.
 
-#### releases[].platform
+##### releases.platform
 Type: `String`
 Default: `phabricator`
 
 Release platform. For now, it should be always set to phabricator.
 
-#### releases[].previousVersion
+##### releases.previousVersion
 Type: `String`
 Default:`undefined`
 
 
-#### releases[].nextVersion
+##### releases.nextVersion
 Type: `String`
 Default: `undefined`
 
-#### releases[].releaseDate
+##### releases.releaseDate
 Type: `String`
 Default: `undefined`
 
 Release date in next format `YYYY-MM-DD`.
 
-#### releases[].releaseTimeFrom
+##### releases.releaseTimeFrom
 Type: `String`
 Default: `undefined`
 
 Release time from in next format `HH:mm`.
 
-#### releases[].releaseTimeTo
+##### releases.releaseTimeTo
 Type: `String`
 Default: `undefined`
 
 Release time to in next format `HH:mm`.
 
-#### releases[].owner
+##### releases.owner
 Type: `String`
 Default: `undefined`
 Usage:
 
 `gates.bill`
 
-#### releases[].projects
+##### releases.projects
 Type: `Array`
 Default: `undefined`
 
 
-#### releases[].subscribers
+##### releases.subscribers
 Type: `Array`
 Default: `undefined`
 
 
-#### releases[].additionalInfo
+##### releases.additionalInfo
 Type: `Array`
 Default: `undefined`
 
 
-#### releases[].additionalInfo[].title
+##### releases.additionalInfo.title
 Type: `String`
 Default: `null`
 
 Title of an additonal info.
 
-#### releases[].additionalInfo[].entries
+##### releases.additionalInfo.entries
 Type: `Array`
 Default: `null`
 
 
-#### releases[].additionalInfo[].entries[].value
+##### releases.additionalInfo.entries.value
 Type: `String`
 Default: `null`
 
-#### releases[].additionalInfo[].entries[].visible
+##### releases.additionalInfo.entries.visible
 Type: `Boolean`
 Default: `true`
 
 
-### Example config
+#### Example config
 
 ```
 {
@@ -143,7 +148,7 @@ Default: `true`
       }
     }
   },
-  "releases": [{
+  "releases": {
     "platform": "phabricator",
     "previousVersion": "1.45.0",
     "nextVersion": "1.46.0",
@@ -197,11 +202,11 @@ Default: `true`
         ]
       }
     ]
-  }]
+  ]
 }
 
 ```
-## Commands
+### Commands
 
 `releases`
 
@@ -211,6 +216,9 @@ It handles project releases.
 
 It will create task with summary of upcoming taskas and notes.
 
+## fakerito-server
+
+### Config
 
 ## Contributing
 

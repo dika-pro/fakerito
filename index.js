@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-
 const express = require('express')
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
@@ -10,9 +7,12 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const shortid = require('shortid')
 const _  = require('lodash');
+const basicAuth = require('express-basic-auth')
+ 
 
 const platform = require('./src/phabricator/platform');
 const releaseApp = require('./src/apps/releases');
+const pastePhabApi = require('./src/phabricator/paste');
 const phabricatorApi = require('./src/phabricator/index');
 const api = {
   releases: releaseApp
@@ -31,24 +31,23 @@ platform.createPlatform(config);
 
 app.use(bodyParser.json())
 app.use(cors())
+app.use(basicAuth({
+  users: { admin: 'c2RzZDpzZHNk' },
+}))
 
-function insterDefaultData() {
-  let defualtData = {};
-  let rawdata;
+
+async function insterDefaultData() {
   const omit = ["releases"]
-  try{
-    rawdata = fs.readFileSync(path.resolve(process.cwd(), 'config/defaultData.json'), 'UTF-8');
-    defualtData = JSON.parse(rawdata);
-  }catch(e) {
-    console.log(e);
+  const defData = await pastePhabApi.getPasteByIds([config.get('release.pasteId')]);
+  let defualtData = {};
+  if (defData.data && defData.data.length) {
+    defualtData = JSON.parse(defData.data[0].attachments.content.content);
+    _.forEach(defualtData, function(value, key) {
+      if (omit.indexOf(key) === -1) {
+        db.set(key, value).write();
+      }
+    });
   }
-  
-  _.forEach(defualtData, function(value, key) {
-    if (omit.indexOf(key) === -1) {
-      db.set(key, value).write();
-    }
-  });
-
   if (!db.has('releases').value()) {
     db.set('releases', [])
     .write();
@@ -66,6 +65,7 @@ app.get('/applications', (req, res) => {
 app.get('/releases', (req, res) => {
   const result = db.get('releases')
   .orderBy(['updatedAt'], ['desc'])
+  .take(30)
   .value();
   const applications = db.get('applications')
   .value();
@@ -85,15 +85,17 @@ app.post('/releases/create', async (req, res) => {
   const result = db.get('releases')
   const applications = db.get('applications').value();
   let data = req.body;
-  let application = _.find(applications, {id: data.release.applicationId});;
+  let application = _.find(applications, {id: data.release.applicationId});
   let phabResponse = null;
 
   data.release.id = shortid.generate();
   data.release.createdAt = Date.now();
   data.release.updatedAt = Date.now();
 
-  result.push(data.release)
-  .write();
+  // do not inster if dry run
+  if (!data.params.dryRun) {
+    result.push(data.release).write();
+  }
   
   // call to phab
   phabResponse = await api.releases['generate-release-notes'](
@@ -103,7 +105,7 @@ app.post('/releases/create', async (req, res) => {
       projectTag: application.projectTag,
       projectName: application.projectName
     }
-  )
+  );
 
   res.json({
     release: data.release,
@@ -112,31 +114,77 @@ app.post('/releases/create', async (req, res) => {
   });
 });
 
-app.put('/releases/:id/update', (req, res) => {
+app.get('/releases/release/:id', (req, res) => {
   const releaseId = req.params.id;
-  let newData = req.body;
-  newData.updatedAt = Date.now();
 
   const result = db.get('releases')
-    find({ id: releaseId })
-    .assign(newData) // kako ovaj assign radi?
+    .find({ id: releaseId })
     .value();
  
   res.json({result: result});
 });
 
-app.put('/releases/:projectTag.:nextVersion/update-tasks', (req, res) => {
+app.put('/releases/:id/update', async (req, res) => {
+  const releaseId = req.params.id;
+  let newData = req.body;
+  const applications = db.get('applications').value();
+  const result = {};
+  newData.release.updatedAt = Date.now();
+  let application = _.find(applications, {id: newData.release.applicationId});
+
+  if (!newData.params.dryRun) {
+    result = db.get('releases')
+    find({ id: releaseId })
+    .assign(_.omit(newData.release, [
+      'createdAt', 'id', 'applicationId', 'platform'
+    ])) 
+    .write();
+ 
+  }
+
+   // call to phab
+   phabResponse = await api.releases['generate-release-notes'](
+    newData.params, 
+    {
+      ...newData.release,
+      projectTag: application.projectTag,
+      projectName: application.projectName
+    }
+  );
+
+  res.json({
+    result: result,
+    message: phabResponse.message,
+    platformRelease: phabResponse.release
+  });
+});
+
+app.put('/releases/:projectTag.:nextVersion/update-tasks', async (req, res) => {
   const nextVersion = req.params.nextVersion;
   const projectTag = req.params.projectTag;
-
+  const applications = db.get('applications').value();
   const result = db.get('releases')
-    find({ nextVersion: nextVersion, projectTag: projectTag })
-    .value();
+  find({ nextVersion: nextVersion, projectTag: projectTag })
+  .value();
+  let application = _.find(applications, {id: result.applicationId});
 
+    // call to phab
+   phabResponse = await api.releases['generate-release-notes'](
+    newData.params, 
+    {
+      ...result,
+      projectTag: application.projectTag,
+      projectName: application.projectName
+    }
+  );
 
   // update taskas
  
-  res.json({result: result});
+  res.json({
+    result: result,
+    message: phabResponse.message,
+    platformRelease: phabResponse.release
+  });
 });
 
 app.get('/releases/templates', (req, res) => {
@@ -145,4 +193,4 @@ app.get('/releases/templates', (req, res) => {
   res.json({result: result});
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Fakerito-server listening on port ${port}!`))

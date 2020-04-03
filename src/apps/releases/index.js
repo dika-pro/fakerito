@@ -94,6 +94,7 @@ async function generateReleaseNotes(params, newRelease) {
     platform: currentPlatform
   });
   let response = null;
+
   const owner = await phabricatorUsers.getUsersByUsernames([newRelease.owner]);
   const subscribes = await phabricatorUsers.getUsersByUsernames(newRelease.subscribers);
   let description;
@@ -156,7 +157,7 @@ async function generateReleaseNotes(params, newRelease) {
   } else {
     response = await releaseTask.createOrUpdate(taskPayload);
     result.release = response.data;
-    result.message = `Sucessfuly created release notes. See (${currentPlatform.getConfig('url')}/T${response.object.id}).`;
+    result.message = `Sucessfuly created/updated release notes. See (${currentPlatform.getConfig('url')}/T${response.object.id}).`;
   }
 
   return result;

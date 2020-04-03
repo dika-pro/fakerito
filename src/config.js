@@ -45,8 +45,8 @@ var config = convict({
     },
     releases: {
         doc: 'A list of releases.',
-        format: Array,
-        default: [],
+        format: Object,
+        default: {},
         children: {
             platform: {
                 doc: 'Platform',

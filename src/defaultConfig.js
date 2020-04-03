@@ -35,17 +35,26 @@ var config = convict({
         slack: {
           doc: 'Slack custom field.',
           format: String, 
+          env: 'SLACK_CUSTOM_FIELD',
+          arg: 'slack_custom_field' ,
           default: undefined
         }
       }
     }
+  },
+  release: {
+    pasteId: {
+      doc: 'Paste ID that will be uses as default content.',
+      format: Number,  
+      env: 'PASTE_ID',
+      arg: 'paste_id',
+      default: undefined
+    },
   }
 });
  
-// Load environment dependent configuration
-var env = config.get('env');
 
-config.loadFile('./config/' + env + '.json');
+config.loadFile('.env.json');
 
 // Perform validation
 config.validate({allowed: 'strict'});

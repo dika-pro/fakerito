@@ -100,4 +100,5 @@ typings/
 # Custom
 
 db.json
-config/
+/*.env
+/*.env.json
