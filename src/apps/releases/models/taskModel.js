@@ -32,13 +32,8 @@ Task.prototype.getCallSign = function() {
 }
 
 Task.prototype.getNameShort = function() {
-    // without getCallSign
-    const nameDisambled = this.data.fields.name.split('-');
-    let finalResult = '';
-    // fix short name
-    // nije oov ok, [DEV-OPS] - Seven - Easybet - Create new web production app
-    finalResult = nameDisambled.splice(1, nameDisambled.length).join(' ');
-    return finalResult.trim();
+    // later get without getCallSign
+    return this.data.fields.name;
 }
 
 
