@@ -8,6 +8,20 @@ var config = convict({
     default: 'development',
     env: 'NODE_ENV'
   },
+  basic_username: {
+    doc: 'Set api user.',
+    format: String, 
+    default: undefined,
+    arg: 'basic_username',
+    env: 'BASIC_USERNAME'
+  },
+  basic_password: {
+    doc: 'Set api pass.',
+    format: String, 
+    default: undefined,
+    arg: 'basic_password',
+    env: 'BASIC_PASSWORD'
+  },
   phabricator: {
     api: {
       doc: 'Phabricator API url.',

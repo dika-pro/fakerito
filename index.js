@@ -22,7 +22,9 @@ const adapter = new FileSync('db.json')
 const db = low(adapter)
 const app = express();
 const port = 3000
+let basicAuthData = {};
 
+basicAuthData[config.get('basic_username')] = config.get('basic_password');
 phabricatorApi.connect({
   api: config.get('phabricator.api'),
   token: config.get('phabricator.token')
@@ -32,7 +34,7 @@ platform.createPlatform(config);
 app.use(bodyParser.json())
 app.use(cors())
 app.use(basicAuth({
-  users: { admin: 'c2RzZDpzZHNk' },
+  users: basicAuthData,
 }))
 
 
