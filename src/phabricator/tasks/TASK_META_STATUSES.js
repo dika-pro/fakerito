@@ -27,7 +27,8 @@ module.exports = {
         IS_PATCH: {
             positive: function(params) {
                  const task = params.task; 
-                 const isPatch = _.find(task.data.attachments.projects.projectPHIDs, 'PHID-PROJ-ybfgysjchkqm6ooarhbx');
+                 const tags = task.data.attachments.projects.projectPHIDs;
+                 const isPatch = tags.find(element => element === 'PHID-PROJ-ybfgysjchkqm6ooarhbx');
                  if (isPatch) {
                      return true;
                  }

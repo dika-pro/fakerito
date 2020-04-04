@@ -91,6 +91,7 @@ app.post('/releases/create', async (req, res) => {
   data.release.id = shortid.generate();
   data.release.createdAt = Date.now();
   data.release.updatedAt = Date.now();
+  data.release.application = application;
 
   // do not inster if dry run
   if (!data.params.dryRun) {
@@ -128,18 +129,18 @@ app.put('/releases/:id/update', async (req, res) => {
   const releaseId = req.params.id;
   let newData = req.body;
   const applications = db.get('applications').value();
-  const result = {};
+  let result = {};
   newData.release.updatedAt = Date.now();
   let application = _.find(applications, {id: newData.release.applicationId});
 
   if (!newData.params.dryRun) {
     result = db.get('releases')
-    find({ id: releaseId })
+    .find({ id: releaseId })
     .assign(_.omit(newData.release, [
-      'createdAt', 'id', 'applicationId', 'platform'
+      'createdAt', 'id', 'applicationId', 'platform', 'application'
     ])) 
     .write();
- 
+
   }
 
    // call to phab
@@ -159,17 +160,19 @@ app.put('/releases/:id/update', async (req, res) => {
   });
 });
 
-app.put('/releases/:projectTag.:nextVersion/update-tasks', async (req, res) => {
-  const nextVersion = req.params.nextVersion;
-  const projectTag = req.params.projectTag;
+app.put('/releases/release/application/:tag/version/:version', async (req, res) => {
+  const nextVersion = req.params.version;
+  const projectTag = req.params.tag;
   const applications = db.get('applications').value();
   const result = db.get('releases')
-  find({ nextVersion: nextVersion, projectTag: projectTag })
+  .find( release => {
+    return release.nextVersion === nextVersion && release.application.projectTag === projectTag
+  })
   .value();
   let application = _.find(applications, {id: result.applicationId});
 
-    // call to phab
-   phabResponse = await api.releases['generate-release-notes'](
+  // call to phab
+  phabResponse = await api.releases['generate-release-notes'](
     newData.params, 
     {
       ...result,
@@ -179,7 +182,6 @@ app.put('/releases/:projectTag.:nextVersion/update-tasks', async (req, res) => {
   );
 
   // update taskas
- 
   res.json({
     result: result,
     message: phabResponse.message,
