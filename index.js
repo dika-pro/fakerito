@@ -21,7 +21,7 @@ const config = require('./src/defaultConfig.js');
 const adapter = new FileSync('db.json')
 const db = low(adapter)
 const app = express();
-const port = 3000
+const PORT = process.env.PORT || 3000;
 let basicAuthData = {};
 
 basicAuthData[config.get('basic_username')] = config.get('basic_password');
@@ -197,4 +197,4 @@ app.get('/releases/templates', (req, res) => {
   res.json({result: result});
 });
 
-app.listen(port, () => console.log(`Fakerito-server listening on port ${port}!`))
+app.listen(PORT, () => console.log(`Fakerito-server listening on port ${PORT}!`))
