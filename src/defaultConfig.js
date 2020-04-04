@@ -68,7 +68,12 @@ var config = convict({
 });
  
 
-config.loadFile('.env.json');
+try{
+
+  config.loadFile('.env.json');
+} catch(e) {
+  console.log('Did not finde .env.json');
+}
 
 // Perform validation
 config.validate({allowed: 'strict'});
