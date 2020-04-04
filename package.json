@@ -4,7 +4,7 @@
   "private": false,
   "description": "CLI for boosting opinioned phabricator workflow",
   "engines": {
-    "node": "12.x",
+    "node": "12.16.1",
     "npm": "~6.2.0"
   },
   "main": "index.js",
