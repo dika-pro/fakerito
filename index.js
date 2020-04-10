@@ -41,6 +41,7 @@ app.use(basicAuth({
 async function insterDefaultData() {
   const omit = ["releases"]
   const defData = await pastePhabApi.getPasteByIds([config.get('release.pasteId')]);
+  var isEmptyRelease = db.has('releases').value();
   let defualtData = {};
   if (defData.data && defData.data.length) {
     defualtData = JSON.parse(defData.data[0].attachments.content.content);
@@ -51,8 +52,9 @@ async function insterDefaultData() {
       }
     });
   }
-  if (!db.has('releases').value()) {
-    console.info('Creating empty releases key');
+
+  if (!isEmptyRelease) {
+    console.info('Creating empty releases key because value is', isEmptyRelease);
     db.set('releases', [])
     .write();
   }
