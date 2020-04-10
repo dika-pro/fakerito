@@ -46,11 +46,13 @@ async function insterDefaultData() {
     defualtData = JSON.parse(defData.data[0].attachments.content.content);
     _.forEach(defualtData, function(value, key) {
       if (omit.indexOf(key) === -1) {
+        console.info('Creating key:', key);
         db.set(key, value).write();
       }
     });
   }
   if (!db.has('releases').value()) {
+    console.info('Creating empty releases key');
     db.set('releases', [])
     .write();
   }
