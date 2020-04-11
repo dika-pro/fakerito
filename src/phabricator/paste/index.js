@@ -10,5 +10,16 @@ module.exports = {
               content: true
             }
         });
-    }
+    },
+    updatePaste: function(id, data) {
+      return phabricatorApi.exec('paste.edit', {
+        transactions: [
+            {
+              type: 'text',
+              value: data
+            }
+          ],
+          objectIdentifier: id
+      });
+  }
 }

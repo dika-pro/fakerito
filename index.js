@@ -40,11 +40,15 @@ app.use(basicAuth({
 
 async function insterDefaultData() {
   const omit = ["releases"]
-  const defData = await pastePhabApi.getPasteByIds([config.get('release.pasteId')]);
-  var isEmptyRelease = db.has('releases').value();
-  let defualtData = {};
-  if (defData.data && defData.data.length) {
-    defualtData = JSON.parse(defData.data[0].attachments.content.content);
+  const persistedData = await pastePhabApi.getPasteByIds(
+      [config.get('release.pasteId'), 
+      config.get('release.pasteReleasesId')
+  ]);
+  let defualtData = _.find(persistedData.data, { id: config.get('release.pasteId') });
+  let defualtReleaseData = _.find(persistedData.data, { id: config.get('release.pasteReleasesId') });
+
+  if (defualtData) {
+    defualtData = JSON.parse(defualtData.attachments.content.content);
     _.forEach(defualtData, function(value, key) {
       if (omit.indexOf(key) === -1) {
         console.info('Creating key:', key);
@@ -53,9 +57,10 @@ async function insterDefaultData() {
     });
   }
 
-  if (!isEmptyRelease) {
-    console.info('Creating empty releases key because value is', isEmptyRelease);
-    db.set('releases', [])
+  if (defualtReleaseData) {
+    defualtReleaseData = JSON.parse(defualtReleaseData.attachments.content.content);
+    console.info('Filling  releases key');
+    db.set('releases', defualtReleaseData.releases)
     .write();
   }
 }
@@ -102,6 +107,12 @@ app.post('/releases/create', async (req, res) => {
   // do not inster if dry run
   if (!data.params.dryRun) {
     result.push(data.release).write();
+    pastePhabApi.updatePaste(
+      config.get('release.pasteReleasesId'),
+      JSON.stringify({
+        releases: db.get('releases')
+      })
+    );
   }
   
   // call to phab
@@ -147,6 +158,12 @@ app.put('/releases/:id/update', async (req, res) => {
     ])) 
     .write();
 
+    pastePhabApi.updatePaste(
+      config.get('release.pasteReleasesId'),
+      JSON.stringify({
+        releases: db.get('releases')
+      })
+    );
   }
 
    // call to phab

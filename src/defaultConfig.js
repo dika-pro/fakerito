@@ -64,6 +64,13 @@ var config = convict({
       arg: 'paste_id',
       default: undefined
     },
+    pasteReleasesId: {
+      doc: 'Paste ID that will be uses as release storage.',
+      format: Number,  
+      env: 'PASTE_RELEASES_ID',
+      arg: 'paste_release_id',
+      default: undefined
+    },
   }
 });
  
