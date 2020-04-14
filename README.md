@@ -1,10 +1,10 @@
 # Fakerito
 
-CLI for boosting opinioned phabricator workflow.
+Includes CLI and NODE server for boosting phabricator release workflow.
 
 ## Installation
 
-You will need to install [arcanist](https://github.com/phacility/arcanist) to starting using commands.
+You will need to install [arcanist](https://github.com/phacility/arcanist) to start using commands.
 
 You may install this tool with this command:
 
@@ -130,6 +130,9 @@ Default: `null`
 ##### releases.additionalInfo.entries.visible
 Type: `Boolean`
 Default: `true`
+Description: 
+
+If false it will not render `value` in release task. 
 
 
 #### Example config
@@ -219,6 +222,9 @@ It will create task with summary of upcoming taskas and notes.
 ## fakerito-server
 
 ### Config
+
+### API
+
 
 ## Contributing
 
