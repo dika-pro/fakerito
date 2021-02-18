@@ -111,7 +111,7 @@ async function generateReleaseNotes(params, newRelease) {
       },
       {
         type: currentPlatform.getConfig('task.customFields.slack'),
-        value: newRelease.slackChannel
+        value: newRelease.application.slackChannel
       },
     ]
   };
